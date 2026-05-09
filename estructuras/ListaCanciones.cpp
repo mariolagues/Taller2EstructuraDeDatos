@@ -1,5 +1,7 @@
 #include "ListaCanciones.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 ListaCanciones::ListaCanciones() {
@@ -175,4 +177,24 @@ void ListaCanciones::eliminarPorId(int id) {
         actual = actual->getSiguiente();
         posicion++;
     }
+}
+void ListaCanciones::mezclar() {
+    if (cantidad <= 1) {
+        return;
+    }
+
+    srand(time(nullptr));
+
+    ListaCanciones nuevaLista;
+
+    while (!estaVacia()) {
+        int posicionAleatoria = rand() % cantidad + 1;
+
+        Cancion c = obtenerPorPosicion(posicionAleatoria);
+        nuevaLista.agregarFinal(c);
+
+        eliminarPorPosicion(posicionAleatoria);
+    }
+
+    copiarDesde(nuevaLista);
 }

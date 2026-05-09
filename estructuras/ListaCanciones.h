@@ -11,6 +11,8 @@ public:
     ListaCanciones();
     ~ListaCanciones();
 
+    void mezclar();
+    
     bool estaVacia();
     int getCantidad();
 

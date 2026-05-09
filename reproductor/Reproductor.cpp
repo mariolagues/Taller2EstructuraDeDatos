@@ -43,6 +43,14 @@ void Reproductor::iniciar() {
             guardarEstado();
         } else if (opcion == 'S') {
             aleatorio = !aleatorio;
+
+            if (aleatorio) {
+                listaActual.mezclar();
+                cout << "Modo aleatorio activado. Lista mezclada." << endl;
+            } else {
+                cout << "Modo aleatorio desactivado." << endl;
+            }
+
             guardarEstado();
         } else if (opcion == 'R') {
             repeticion++;
@@ -107,7 +115,17 @@ void Reproductor::pistaSiguiente() {
     }
 
     if (listaActual.estaVacia()) {
-        listaActual.copiarDesde(cancionesRegistradas);
+        if (repeticion == 2) { 
+            listaActual.copiarDesde(cancionesRegistradas);
+
+            if (aleatorio) {
+                listaActual.mezclar();
+            }
+        } else {
+            reproduciendo = false;
+            tieneActual = false;
+            return;
+        }
     }
 
     actual = listaActual.obtenerPrimero();
@@ -307,6 +325,9 @@ void Reproductor::reproducirCancionPorPosicion(int posicion) {
             listaActual.agregarFinal(cancionesRegistradas.obtenerPorPosicion(i));
         }
     }
+    if (aleatorio) {
+        listaActual.mezclar();
+    }
 
     cout << "Reproduciendo: " << actual.toString() << endl;
 }
@@ -344,21 +365,23 @@ void Reproductor::menuListaActual() {
         cout << endl;
 
         if (tieneActual) {
-            cout << "Actual: " << actual.toString() << endl;
+            cout << "Actual" << textoModos() << ": " << actual.toString() << endl;
         } else {
-            cout << "Actual: Reproduccion detenida" << endl;
+            cout << "Actual: Reproduccion Detenida" << endl;
         }
 
-        cout << endl;
-        cout << "Lista actual:" << endl;
+        cout << "Lista de reproduccion actual:" << endl;
         listaActual.mostrar();
 
         cout << endl;
         cout << "Opciones:" << endl;
-        cout << "S<num> - Saltar a cancion" << endl;
-        cout << "V - Volver" << endl;
-        cout << "Ingrese opcion: ";
 
+        if (!listaActual.estaVacia()) {
+            cout << "S<num> - Saltar a la cancion seleccionada" << endl;
+        }
+
+        cout << "V - Volver al menu principal" << endl;
+        cout << "Ingrese opcion: ";
         cin >> opcion;
 
         char accion = toupper(opcion[0]);
@@ -366,15 +389,14 @@ void Reproductor::menuListaActual() {
         if (accion == 'V') {
             volver = true;
         } else if (accion == 'S') {
-
             if (opcion.length() <= 1) {
-                cout << "Debe ingresar un numero." << endl;
-                continue;
+                cout << "Debe ingresar una posicion. Ejemplo: S2" << endl;
+            } else {
+                int posicion = stoi(opcion.substr(1));
+                saltarCancionListaActual(posicion);
+                guardarEstado();
+                volver = true;
             }
-
-            int numero = stoi(opcion.substr(1));
-            saltarCancionListaActual(numero);
-
         } else {
             cout << "Opcion invalida." << endl;
         }
@@ -382,6 +404,10 @@ void Reproductor::menuListaActual() {
     } while (!volver);
 }
 void Reproductor::saltarCancionListaActual(int posicion) {
+    if (listaActual.estaVacia()) {
+        cout << "La lista actual esta vacia." << endl;
+        return;
+    }
 
     if (posicion < 1 || posicion > listaActual.getCantidad()) {
         cout << "Posicion invalida." << endl;
@@ -392,12 +418,15 @@ void Reproductor::saltarCancionListaActual(int posicion) {
         historial.agregarFinal(actual);
     }
 
-    actual = listaActual.obtenerPorPosicion(posicion);
+    for (int i = 1; i < posicion; i++) {
+        listaActual.eliminarPrimero();
+    }
 
-    listaActual.eliminarPorPosicion(posicion);
+    actual = listaActual.obtenerPrimero();
+    listaActual.eliminarPrimero();
 
     tieneActual = true;
     reproduciendo = true;
 
-    cout << "Saltando a: " << actual.toString() << endl;
+    cout << "Ahora reproduciendo: " << actual.toString() << endl;
 }
