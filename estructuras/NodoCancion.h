@@ -1,5 +1,5 @@
 #pragma once
-#include "Cancion.h"
+#include "../modelo/Cancion.h"
 
 class NodoCancion {
 private:

@@ -140,3 +140,39 @@ void ListaCanciones::vaciar() {
         eliminarPrimero();
     }
 }
+void ListaCanciones::copiarDesde(ListaCanciones& otra) {
+    vaciar();
+
+    for (int i = 1; i <= otra.getCantidad(); i++) {
+        Cancion c = otra.obtenerPorPosicion(i);
+        agregarFinal(c);
+    }
+}
+Cancion ListaCanciones::obtenerPorId(int id) {
+    NodoCancion* actual = primero;
+
+    while (actual != nullptr) {
+        if (actual->getDato().getId() == id) {
+            return actual->getDato();
+        }
+
+        actual = actual->getSiguiente();
+    }
+
+    return Cancion();
+}
+
+void ListaCanciones::eliminarPorId(int id) {
+    NodoCancion* actual = primero;
+    int posicion = 1;
+
+    while (actual != nullptr) {
+        if (actual->getDato().getId() == id) {
+            eliminarPorPosicion(posicion);
+            return;
+        }
+
+        actual = actual->getSiguiente();
+        posicion++;
+    }
+}

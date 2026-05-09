@@ -1,22 +1,18 @@
 #include <iostream>
-#include "ListaCanciones.h"
-#include "ArchivoMusica.h"
+#include "estructuras/ListaCanciones.h"
+#include "archivos/ArchivoMusica.h"
+#include "reproductor/Reproductor.h"
 
 using namespace std;
 
 int main() {
     ListaCanciones canciones;
 
-    ArchivoMusica::cargarCanciones("music_source.txt", canciones);
+    ArchivoMusica::cargarCanciones("../music_source.txt", canciones);
 
-    cout << "Canciones registradas:" << endl;
-    canciones.mostrar();
-
-    cout << endl;
-    cout << "Probando obtener por posicion:" << endl;
-
-    Cancion c = canciones.obtenerPorPosicion(1);
-    cout << c.toString() << endl;
+    Reproductor reproductor;
+    reproductor.cargarCanciones(canciones);
+    reproductor.iniciar();
 
     return 0;
 }

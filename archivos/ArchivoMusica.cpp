@@ -51,3 +51,29 @@ void ArchivoMusica::cargarCanciones(string nombreArchivo, ListaCanciones& lista)
 
     archivo.close();
 }
+void ArchivoMusica::guardarCanciones(string nombreArchivo, ListaCanciones& lista) {
+    ofstream archivo(nombreArchivo);
+
+    if (!archivo.is_open()) {
+        cout << "No se pudo guardar el archivo " << nombreArchivo << endl;
+        return;
+    }
+
+    for (int i = 1; i <= lista.getCantidad(); i++) {
+        Cancion c = lista.obtenerPorPosicion(i);
+
+        archivo << c.getId() << ","
+                << c.getNombre() << ","
+                << c.getArtista() << ","
+                << c.getAlbum() << ","
+                << c.getAnio() << ","
+                << c.getDuracion() << ","
+                << c.getUbicacion();
+
+        if (i < lista.getCantidad()) {
+            archivo << endl;
+        }
+    }
+
+    archivo.close();
+}

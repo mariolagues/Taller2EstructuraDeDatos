@@ -4,11 +4,13 @@ project(Taller1)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Taller1 main.cpp
-        Cancion.h
-        Cancion.cpp
-        NodoCancion.h
-        NodoCancion.cpp
-        ListaCanciones.h
-        ListaCanciones.cpp
-        ArchivoMusica.h
-        ArchivoMusica.cpp)
+        modelo/Cancion.h
+        modelo/Cancion.cpp
+        estructuras/NodoCancion.h
+        estructuras/NodoCancion.cpp
+        estructuras/ListaCanciones.h
+        estructuras/ListaCanciones.cpp
+        archivos/ArchivoMusica.h
+        archivos/ArchivoMusica.cpp
+        reproductor/Reproductor.h
+        reproductor/Reproductor.cpp)

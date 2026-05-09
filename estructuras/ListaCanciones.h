@@ -18,9 +18,14 @@ public:
     void mostrar();
 
     Cancion obtenerPorPosicion(int posicion);
+    Cancion obtenerPorId(int id);
     Cancion obtenerPrimero();
 
     void eliminarPrimero();
     void eliminarPorPosicion(int posicion);
+    void eliminarPorId(int id);
     void vaciar();
+
+    void copiarDesde(ListaCanciones& otra);
+
 };
