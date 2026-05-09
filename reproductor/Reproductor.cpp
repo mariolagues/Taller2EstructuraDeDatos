@@ -12,6 +12,7 @@ Reproductor::Reproductor() {
 void Reproductor::cargarCanciones(ListaCanciones canciones) {
     cancionesRegistradas.copiarDesde(canciones);
     listaActual.copiarDesde(cancionesRegistradas);
+    cargarEstado();
 }
 
 void Reproductor::iniciar() {
@@ -27,23 +28,31 @@ void Reproductor::iniciar() {
 
         if (opcion == 'W') {
             reproducirPausar();
+            guardarEstado();
         } else if (opcion == 'E') {
             pistaSiguiente();
+            guardarEstado();
         } else if (opcion == 'Q') {
             pistaAnterior();
+            guardarEstado();
         } else if (opcion == 'A') {
-            mostrarListaActual();
+            menuListaActual();
+            guardarEstado();
         } else if (opcion == 'L') {
             menuCancionesRegistradas();
+            guardarEstado();
         } else if (opcion == 'S') {
             aleatorio = !aleatorio;
+            guardarEstado();
         } else if (opcion == 'R') {
             repeticion++;
+            guardarEstado();
             if (repeticion > 2) {
                 repeticion = 0;
             }
         } else if (opcion == 'X') {
             salir = true;
+            guardarEstado();
         } else {
             cout << "Opcion invalida" << endl;
         }
@@ -312,4 +321,83 @@ void Reproductor::agregarCancionALista(int posicion) {
     listaActual.agregarFinal(c);
 
     cout << "Cancion agregada a la lista actual: " << c.toString() << endl;
+}
+void Reproductor::cargarEstado() {
+    bool existe = ArchivoEstado::cargarEstado("../status.cfg", cancionesRegistradas,
+                                             actual, tieneActual, reproduciendo,
+                                             aleatorio, repeticion);
+
+    if (!existe) {
+        guardarEstado();
+    }
+}
+
+void Reproductor::guardarEstado() {
+    ArchivoEstado::guardarEstado("../status.cfg", actual, tieneActual,
+                                 reproduciendo, aleatorio, repeticion);
+}
+void Reproductor::menuListaActual() {
+    string opcion;
+    bool volver = false;
+
+    do {
+        cout << endl;
+
+        if (tieneActual) {
+            cout << "Actual: " << actual.toString() << endl;
+        } else {
+            cout << "Actual: Reproduccion detenida" << endl;
+        }
+
+        cout << endl;
+        cout << "Lista actual:" << endl;
+        listaActual.mostrar();
+
+        cout << endl;
+        cout << "Opciones:" << endl;
+        cout << "S<num> - Saltar a cancion" << endl;
+        cout << "V - Volver" << endl;
+        cout << "Ingrese opcion: ";
+
+        cin >> opcion;
+
+        char accion = toupper(opcion[0]);
+
+        if (accion == 'V') {
+            volver = true;
+        } else if (accion == 'S') {
+
+            if (opcion.length() <= 1) {
+                cout << "Debe ingresar un numero." << endl;
+                continue;
+            }
+
+            int numero = stoi(opcion.substr(1));
+            saltarCancionListaActual(numero);
+
+        } else {
+            cout << "Opcion invalida." << endl;
+        }
+
+    } while (!volver);
+}
+void Reproductor::saltarCancionListaActual(int posicion) {
+
+    if (posicion < 1 || posicion > listaActual.getCantidad()) {
+        cout << "Posicion invalida." << endl;
+        return;
+    }
+
+    if (tieneActual) {
+        historial.agregarFinal(actual);
+    }
+
+    actual = listaActual.obtenerPorPosicion(posicion);
+
+    listaActual.eliminarPorPosicion(posicion);
+
+    tieneActual = true;
+    reproduciendo = true;
+
+    cout << "Saltando a: " << actual.toString() << endl;
 }

@@ -13,4 +13,6 @@ add_executable(Taller1 main.cpp
         archivos/ArchivoMusica.h
         archivos/ArchivoMusica.cpp
         reproductor/Reproductor.h
-        reproductor/Reproductor.cpp)
+        reproductor/Reproductor.cpp
+        archivos/ArchivoEstado.h
+        archivos/ArchivoEstado.cpp)

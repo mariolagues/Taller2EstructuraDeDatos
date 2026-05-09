@@ -1,6 +1,7 @@
 #pragma once
 #include "../estructuras/ListaCanciones.h"
 #include "../archivos/ArchivoMusica.h"
+#include "../archivos/ArchivoEstado.h"
 
 class Reproductor {
 private:
@@ -22,6 +23,8 @@ private:
 
 public:
     Reproductor();
+    void cargarEstado();
+    void guardarEstado();
 
     void cargarCanciones(ListaCanciones canciones);
 
@@ -34,6 +37,9 @@ public:
 
     void mostrarListaActual();
     void mostrarCancionesRegistradas();
+    
+    void menuListaActual();
+    void saltarCancionListaActual(int posicion);
 
     string textoEstado();
     string textoModos();

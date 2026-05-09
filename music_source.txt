@@ -1,4 +1,4 @@
-1,Fire Dance,Vivid BAD Squad,Fire Dance Single,2025,180,C:/musica/fire.mp3
-2,Show,Ado,Album Show,2023,210,C:/musica/show.mp3
-3,World is Mine,Ryo feat Hatsune Miku,Single,2008,250,C:/musica/world.mp3
-4,Radioactive,Imagine Dragons,Radioactive Album,2012,190,C:/musica/radioactive.mp3
+1,Fire Dance,Vivid BAD Squad,Fire Dance Single,2025,180,C
+2,Show,Ado,Album Show,2023,210,C
+3,World is Mine,Ryo feat Hatsune Miku,Single,2008,250,C
+4,Radioactive,Imagine Dragons,Radioactive Album,2012,190,C
