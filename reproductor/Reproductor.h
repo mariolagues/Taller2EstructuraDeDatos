@@ -8,21 +8,25 @@ private:
     ListaCanciones cancionesRegistradas;
     ListaCanciones listaActual;
     ListaCanciones historial;
-    void menuCancionesRegistradas();
-    void agregarCancionNueva();
-    void eliminarCancionPorPosicion(int posicion);
-    void reproducirCancionPorPosicion(int posicion);
-    void agregarCancionALista(int posicion);
 
     Cancion actual;
 
     bool tieneActual;
     bool reproduciendo;
     bool aleatorio;
-    int repeticion; // 0 desactivado, 1 repetir una, 2 repetir todas
+    int repeticion;
+
+    void menuCancionesRegistradas();
+    void agregarCancionNueva();
+    void eliminarCancionPorPosicion(int posicion);
+    void reproducirCancionPorPosicion(int posicion);
+    void agregarCancionALista(int posicion);
+
+    void registrarReproduccionActual();
 
 public:
     Reproductor();
+
     void cargarEstado();
     void guardarEstado();
 
@@ -37,7 +41,7 @@ public:
 
     void mostrarListaActual();
     void mostrarCancionesRegistradas();
-    
+
     void menuListaActual();
     void saltarCancionListaActual(int posicion);
 

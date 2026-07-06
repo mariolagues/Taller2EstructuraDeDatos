@@ -18,6 +18,10 @@ NodoCancion* NodoCancion::getAnterior() {
     return anterior;
 }
 
+void NodoCancion::setDato(Cancion dato) {
+    this->dato = dato;
+}
+
 void NodoCancion::setSiguiente(NodoCancion* siguiente) {
     this->siguiente = siguiente;
 }

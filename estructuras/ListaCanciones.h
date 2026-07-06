@@ -12,7 +12,7 @@ public:
     ~ListaCanciones();
 
     void mezclar();
-    
+
     bool estaVacia();
     int getCantidad();
 
@@ -23,11 +23,12 @@ public:
     Cancion obtenerPorId(int id);
     Cancion obtenerPrimero();
 
+    void actualizarCancion(Cancion cancion);
+
     void eliminarPrimero();
     void eliminarPorPosicion(int posicion);
     void eliminarPorId(int id);
     void vaciar();
 
     void copiarDesde(ListaCanciones& otra);
-
 };

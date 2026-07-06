@@ -133,6 +133,7 @@ void Reproductor::pistaSiguiente() {
 
     tieneActual = true;
     reproduciendo = true;
+    registrarReproduccionActual();
 }
 
 void Reproductor::pistaAnterior() {
@@ -155,6 +156,7 @@ void Reproductor::pistaAnterior() {
 
     tieneActual = true;
     reproduciendo = true;
+    registrarReproduccionActual();
 }
 
 void Reproductor::mostrarListaActual() {
@@ -285,7 +287,7 @@ void Reproductor::agregarCancionNueva() {
 
     int nuevoId = cancionesRegistradas.getCantidad() + 1;
 
-    Cancion nueva(nuevoId, nombre, artista, album, anio, duracion, ubicacion);
+    Cancion nueva(nuevoId, nombre, artista, album, anio, duracion, ubicacion, 0);
 
     cancionesRegistradas.agregarFinal(nueva);
 
@@ -317,6 +319,7 @@ void Reproductor::reproducirCancionPorPosicion(int posicion) {
     actual = cancionesRegistradas.obtenerPorPosicion(posicion);
     tieneActual = true;
     reproduciendo = true;
+    registrarReproduccionActual();
 
     listaActual.vaciar();
 
@@ -427,6 +430,18 @@ void Reproductor::saltarCancionListaActual(int posicion) {
 
     tieneActual = true;
     reproduciendo = true;
+    registrarReproduccionActual();
 
     cout << "Ahora reproduciendo: " << actual.toString() << endl;
+}
+void Reproductor::registrarReproduccionActual() {
+    if (!tieneActual) {
+        return;
+    }
+
+    actual.aumentarReproducciones();
+
+    cancionesRegistradas.actualizarCancion(actual);
+
+    ArchivoMusica::guardarCanciones("../music_source.txt", cancionesRegistradas);
 }

@@ -69,12 +69,39 @@ Cancion ListaCanciones::obtenerPorPosicion(int posicion) {
     return Cancion();
 }
 
+Cancion ListaCanciones::obtenerPorId(int id) {
+    NodoCancion* actual = primero;
+
+    while (actual != nullptr) {
+        if (actual->getDato().getId() == id) {
+            return actual->getDato();
+        }
+
+        actual = actual->getSiguiente();
+    }
+
+    return Cancion();
+}
+
 Cancion ListaCanciones::obtenerPrimero() {
     if (estaVacia()) {
         return Cancion();
     }
 
     return primero->getDato();
+}
+
+void ListaCanciones::actualizarCancion(Cancion cancion) {
+    NodoCancion* actual = primero;
+
+    while (actual != nullptr) {
+        if (actual->getDato().getId() == cancion.getId()) {
+            actual->setDato(cancion);
+            return;
+        }
+
+        actual = actual->getSiguiente();
+    }
 }
 
 void ListaCanciones::eliminarPrimero() {
@@ -137,33 +164,6 @@ void ListaCanciones::eliminarPorPosicion(int posicion) {
     cantidad--;
 }
 
-void ListaCanciones::vaciar() {
-    while (!estaVacia()) {
-        eliminarPrimero();
-    }
-}
-void ListaCanciones::copiarDesde(ListaCanciones& otra) {
-    vaciar();
-
-    for (int i = 1; i <= otra.getCantidad(); i++) {
-        Cancion c = otra.obtenerPorPosicion(i);
-        agregarFinal(c);
-    }
-}
-Cancion ListaCanciones::obtenerPorId(int id) {
-    NodoCancion* actual = primero;
-
-    while (actual != nullptr) {
-        if (actual->getDato().getId() == id) {
-            return actual->getDato();
-        }
-
-        actual = actual->getSiguiente();
-    }
-
-    return Cancion();
-}
-
 void ListaCanciones::eliminarPorId(int id) {
     NodoCancion* actual = primero;
     int posicion = 1;
@@ -178,6 +178,22 @@ void ListaCanciones::eliminarPorId(int id) {
         posicion++;
     }
 }
+
+void ListaCanciones::vaciar() {
+    while (!estaVacia()) {
+        eliminarPrimero();
+    }
+}
+
+void ListaCanciones::copiarDesde(ListaCanciones& otra) {
+    vaciar();
+
+    for (int i = 1; i <= otra.getCantidad(); i++) {
+        Cancion c = otra.obtenerPorPosicion(i);
+        agregarFinal(c);
+    }
+}
+
 void ListaCanciones::mezclar() {
     if (cantidad <= 1) {
         return;

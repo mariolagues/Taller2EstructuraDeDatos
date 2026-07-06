@@ -14,6 +14,7 @@ public:
     NodoCancion* getSiguiente();
     NodoCancion* getAnterior();
 
+    void setDato(Cancion dato);
     void setSiguiente(NodoCancion* siguiente);
     void setAnterior(NodoCancion* anterior);
 };
