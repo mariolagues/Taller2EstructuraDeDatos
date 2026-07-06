@@ -1,8 +1,13 @@
-//
-// Created by mario on 05/07/2026.
-//
+#pragma once
+#include "../estructuras/ListaCanciones.h"
+#include <string>
+using namespace std;
 
-#ifndef TALLER1_BUSCADORCANCIONES_H
-#define TALLER1_BUSCADORCANCIONES_H
+class BuscadorCanciones {
+public:
+    static void buscar(string texto, ListaCanciones& canciones, ListaCanciones& resultados);
 
-#endif //TALLER1_BUSCADORCANCIONES_H
+private:
+    static string convertirMinuscula(string texto);
+    static bool contieneTexto(string textoCompleto, string textoBuscado);
+};

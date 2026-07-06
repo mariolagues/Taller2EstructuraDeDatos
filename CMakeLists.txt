@@ -16,4 +16,7 @@ add_executable(Taller1 main.cpp
         reproductor/Reproductor.cpp
         archivos/ArchivoEstado.h
         archivos/ArchivoEstado.cpp
-        Busqueda/BuscadorCanciones.h)
+        Busqueda/BuscadorCanciones.h
+        Busqueda/BuscadorCanciones.cpp
+        ranking/RankingCanciones.h
+        ranking/RankingCanciones.cpp)

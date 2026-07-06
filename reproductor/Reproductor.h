@@ -2,6 +2,7 @@
 #include "../estructuras/ListaCanciones.h"
 #include "../archivos/ArchivoMusica.h"
 #include "../archivos/ArchivoEstado.h"
+#include "../busqueda/BuscadorCanciones.h"
 
 class Reproductor {
 private:
@@ -23,6 +24,9 @@ private:
     void agregarCancionALista(int posicion);
 
     void registrarReproduccionActual();
+
+    void menuBuscarCanciones();
+    
 
 public:
     Reproductor();

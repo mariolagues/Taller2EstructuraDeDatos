@@ -1,5 +1,6 @@
 #include "Reproductor.h"
 #include <iostream>
+#include <cctype>
 using namespace std;
 
 Reproductor::Reproductor() {
@@ -29,18 +30,27 @@ void Reproductor::iniciar() {
         if (opcion == 'W') {
             reproducirPausar();
             guardarEstado();
+
         } else if (opcion == 'E') {
             pistaSiguiente();
             guardarEstado();
+
         } else if (opcion == 'Q') {
             pistaAnterior();
             guardarEstado();
+
         } else if (opcion == 'A') {
             menuListaActual();
             guardarEstado();
+
         } else if (opcion == 'L') {
             menuCancionesRegistradas();
             guardarEstado();
+
+        } else if (opcion == 'F') {
+            menuBuscarCanciones();
+            guardarEstado();
+
         } else if (opcion == 'S') {
             aleatorio = !aleatorio;
 
@@ -52,15 +62,20 @@ void Reproductor::iniciar() {
             }
 
             guardarEstado();
+
         } else if (opcion == 'R') {
             repeticion++;
-            guardarEstado();
+
             if (repeticion > 2) {
                 repeticion = 0;
             }
+
+            guardarEstado();
+
         } else if (opcion == 'X') {
             salir = true;
             guardarEstado();
+
         } else {
             cout << "Opcion invalida" << endl;
         }
@@ -89,6 +104,7 @@ void Reproductor::mostrarMenu() {
     cout << "R - Repeticion" << endl;
     cout << "A - Ver lista de reproduccion actual" << endl;
     cout << "L - Listado de canciones" << endl;
+    cout << "F - Buscar canciones" << endl;
     cout << "X - Salir" << endl;
 }
 
@@ -115,7 +131,7 @@ void Reproductor::pistaSiguiente() {
     }
 
     if (listaActual.estaVacia()) {
-        if (repeticion == 2) { 
+        if (repeticion == 2) {
             listaActual.copiarDesde(cancionesRegistradas);
 
             if (aleatorio) {
@@ -208,6 +224,7 @@ string Reproductor::textoModos() {
 
     return texto;
 }
+
 void Reproductor::menuCancionesRegistradas() {
     string opcion;
     bool volver = false;
@@ -328,6 +345,7 @@ void Reproductor::reproducirCancionPorPosicion(int posicion) {
             listaActual.agregarFinal(cancionesRegistradas.obtenerPorPosicion(i));
         }
     }
+
     if (aleatorio) {
         listaActual.mezclar();
     }
@@ -346,6 +364,7 @@ void Reproductor::agregarCancionALista(int posicion) {
 
     cout << "Cancion agregada a la lista actual: " << c.toString() << endl;
 }
+
 void Reproductor::cargarEstado() {
     bool existe = ArchivoEstado::cargarEstado("../status.cfg", cancionesRegistradas,
                                              actual, tieneActual, reproduciendo,
@@ -360,6 +379,7 @@ void Reproductor::guardarEstado() {
     ArchivoEstado::guardarEstado("../status.cfg", actual, tieneActual,
                                  reproduciendo, aleatorio, repeticion);
 }
+
 void Reproductor::menuListaActual() {
     string opcion;
     bool volver = false;
@@ -406,6 +426,7 @@ void Reproductor::menuListaActual() {
 
     } while (!volver);
 }
+
 void Reproductor::saltarCancionListaActual(int posicion) {
     if (listaActual.estaVacia()) {
         cout << "La lista actual esta vacia." << endl;
@@ -434,6 +455,7 @@ void Reproductor::saltarCancionListaActual(int posicion) {
 
     cout << "Ahora reproduciendo: " << actual.toString() << endl;
 }
+
 void Reproductor::registrarReproduccionActual() {
     if (!tieneActual) {
         return;
@@ -444,4 +466,106 @@ void Reproductor::registrarReproduccionActual() {
     cancionesRegistradas.actualizarCancion(actual);
 
     ArchivoMusica::guardarCanciones("../music_source.txt", cancionesRegistradas);
+}
+
+void Reproductor::menuBuscarCanciones() {
+    string texto;
+    string opcion;
+    bool volverPrincipal = false;
+
+    cin.ignore();
+
+    do {
+        ListaCanciones resultados;
+
+        cout << endl;
+        cout << "Busqueda de canciones" << endl;
+        cout << "Buscar canciones que contengan: ";
+        getline(cin, texto);
+
+        if (texto == "") {
+            return;
+        }
+
+        BuscadorCanciones::buscar(texto, cancionesRegistradas, resultados);
+
+        bool repetirBusqueda = false;
+
+        do {
+            cout << endl;
+            cout << "Canciones que contienen \"" << texto << "\":" << endl;
+            resultados.mostrar();
+
+            cout << endl;
+            cout << "Opciones:" << endl;
+
+            if (!resultados.estaVacia()) {
+                cout << "R<num> - Reproducir cancion seleccionada" << endl;
+                cout << "A<num> - Agregar cancion seleccionada al final de la lista actual" << endl;
+            }
+
+            cout << "F - Repetir busqueda con otro texto" << endl;
+            cout << "V - Volver al menu principal" << endl;
+            cout << "Ingrese opcion: ";
+            cin >> opcion;
+
+            char accion = toupper(opcion[0]);
+
+            if (accion == 'V') {
+                volverPrincipal = true;
+            } else if (accion == 'F') {
+                repetirBusqueda = true;
+                cin.ignore();
+            } else {
+                int numero = 0;
+
+                if (opcion.length() > 1) {
+                    numero = stoi(opcion.substr(1));
+                }
+
+                if (numero < 1 || numero > resultados.getCantidad()) {
+                    cout << "Posicion invalida." << endl;
+                } else {
+                    Cancion c = resultados.obtenerPorPosicion(numero);
+
+                    if (accion == 'R') {
+                        actual = c;
+                        tieneActual = true;
+                        reproduciendo = true;
+
+                        listaActual.vaciar();
+
+                        for (int i = 1; i <= cancionesRegistradas.getCantidad(); i++) {
+                            Cancion aux = cancionesRegistradas.obtenerPorPosicion(i);
+
+                            if (aux.getId() != actual.getId()) {
+                                listaActual.agregarFinal(aux);
+                            }
+                        }
+
+                        if (aleatorio) {
+                            listaActual.mezclar();
+                        }
+
+                        registrarReproduccionActual();
+                        guardarEstado();
+
+                        cout << "Reproduciendo: " << actual.toString() << endl;
+                        volverPrincipal = true;
+
+                    } else if (accion == 'A') {
+                        listaActual.agregarFinal(c);
+                        guardarEstado();
+
+                        cout << "Cancion agregada a la lista actual: " << c.toString() << endl;
+
+                    } else {
+                        cout << "Opcion invalida." << endl;
+                    }
+                }
+            }
+
+        } while (!volverPrincipal && !repetirBusqueda);
+
+    } while (!volverPrincipal);
 }
