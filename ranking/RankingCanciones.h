@@ -1,8 +1,22 @@
-//
-// Created by mario on 05/07/2026.
-//
+#pragma once
+#include "../estructuras/ListaCanciones.h"
 
-#ifndef TALLER1_RANKINGCANCIONES_H
-#define TALLER1_RANKINGCANCIONES_H
+class RankingCanciones {
+private:
+    Cancion* heap;
+    int cantidad;
+    int capacidad;
 
-#endif //TALLER1_RANKINGCANCIONES_H
+    void subir(int posicion);
+    void bajar(int posicion);
+    bool esMayor(Cancion a, Cancion b);
+
+public:
+    RankingCanciones(int capacidad);
+    ~RankingCanciones();
+
+    void insertar(Cancion cancion);
+    Cancion extraerMaximo();
+
+    void generarTop10(ListaCanciones& canciones, ListaCanciones& resultado);
+};

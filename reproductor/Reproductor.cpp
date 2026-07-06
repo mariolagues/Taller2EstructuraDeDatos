@@ -72,7 +72,11 @@ void Reproductor::iniciar() {
 
             guardarEstado();
 
-        } else if (opcion == 'X') {
+        } else if (opcion == 'T') {
+            menuRanking();
+            guardarEstado();
+
+        }else if (opcion == 'X') {
             salir = true;
             guardarEstado();
 
@@ -106,6 +110,7 @@ void Reproductor::mostrarMenu() {
     cout << "L - Listado de canciones" << endl;
     cout << "F - Buscar canciones" << endl;
     cout << "X - Salir" << endl;
+    cout << "T - TOP 10 Artistas y Canciones" << endl;
 }
 
 void Reproductor::reproducirPausar() {
@@ -568,4 +573,165 @@ void Reproductor::menuBuscarCanciones() {
         } while (!volverPrincipal && !repetirBusqueda);
 
     } while (!volverPrincipal);
+}
+void Reproductor::menuRanking() {
+    string opcion;
+    bool salir = false;
+
+    do {
+        cout << endl;
+        cout << "Ranking TOP" << endl;
+        cout << "C - Top 10 canciones mas escuchadas" << endl;
+        cout << "A - Top 10 artistas mas escuchados" << endl;
+        cout << "X - Salir" << endl;
+        cout << "Ingrese opcion: ";
+        cin >> opcion;
+
+        char accion = toupper(opcion[0]);
+
+        if (accion == 'C') {
+            mostrarTopCanciones();
+        } else if (accion == 'A') {
+            mostrarTopArtistas();
+        } else if (accion == 'X') {
+            salir = true;
+        } else {
+            cout << "Opcion invalida." << endl;
+        }
+
+    } while (!salir);
+}
+
+void Reproductor::mostrarTopCanciones() {
+    ListaCanciones top;
+    RankingCanciones A_canciones(cancionesRegistradas.getCantidad());
+
+    A_canciones.generarTop10(cancionesRegistradas, top);
+
+    string opcion;
+    bool volver = false;
+
+    do {
+        cout << endl;
+        cout << "Ranking TOP 10 Canciones mas escuchadas:" << endl;
+
+        if (top.estaVacia()) {
+            cout << "Vacia" << endl;
+        } else {
+            for (int i = 1; i <= top.getCantidad(); i++) {
+                Cancion c = top.obtenerPorPosicion(i);
+                cout << i << ". [" << c.getReproducciones() << "] "
+                     << c.toString() << endl;
+            }
+        }
+
+        cout << endl;
+        cout << "Opciones:" << endl;
+
+        if (!top.estaVacia()) {
+            cout << "R<num> - Reproducir cancion seleccionada" << endl;
+            cout << "A<num> - Agregar cancion seleccionada al final de la lista actual" << endl;
+        }
+
+        cout << "V - Volver al menu ranking" << endl;
+        cout << "Ingrese opcion: ";
+        cin >> opcion;
+
+        char accion = toupper(opcion[0]);
+
+        if (accion == 'V') {
+            volver = true;
+        } else {
+            int numero = 0;
+
+            if (opcion.length() > 1) {
+                numero = stoi(opcion.substr(1));
+            }
+
+            if (numero < 1 || numero > top.getCantidad()) {
+                cout << "Posicion invalida." << endl;
+            } else {
+                Cancion c = top.obtenerPorPosicion(numero);
+
+                if (accion == 'R') {
+                    actual = c;
+                    tieneActual = true;
+                    reproduciendo = true;
+
+                    listaActual.vaciar();
+
+                    for (int i = 1; i <= cancionesRegistradas.getCantidad(); i++) {
+                        Cancion aux = cancionesRegistradas.obtenerPorPosicion(i);
+
+                        if (aux.getId() != actual.getId()) {
+                            listaActual.agregarFinal(aux);
+                        }
+                    }
+
+                    if (aleatorio) {
+                        listaActual.mezclar();
+                    }
+
+                    registrarReproduccionActual();
+                    guardarEstado();
+
+                    cout << "Reproduciendo: " << actual.toString() << endl;
+                    volver = true;
+                } else if (accion == 'A') {
+                    listaActual.agregarFinal(c);
+                    guardarEstado();
+
+                    cout << "Cancion agregada a la lista actual: " << c.toString() << endl;
+                } else {
+                    cout << "Opcion invalida." << endl;
+                }
+            }
+        }
+
+    } while (!volver);
+}
+
+void Reproductor::mostrarTopArtistas() {
+
+    RankingArtistas ranking(cancionesRegistradas.getCantidad());
+
+    ArtistaRanking resultado[10];
+
+    int cantidad = 0;
+
+    ranking.generarTop10(cancionesRegistradas,
+                         resultado,
+                         cantidad);
+
+    cout << endl;
+    cout << "TOP 10 Artistas mas escuchados" << endl;
+    cout << "------------------------------" << endl;
+
+    if (cantidad == 0) {
+        cout << "No existen reproducciones." << endl;
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+
+        cout << i + 1 << ". ";
+
+        cout << resultado[i].getNombre();
+
+        cout << " (";
+
+        cout << resultado[i].getReproducciones();
+
+        cout << " reproducciones)";
+
+        cout << endl;
+    }
+
+    cout << endl;
+
+    cout << "Presione ENTER para volver...";
+
+    cin.ignore();
+
+    cin.get();
 }

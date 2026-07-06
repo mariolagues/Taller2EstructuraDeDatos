@@ -3,7 +3,8 @@
 #include "../archivos/ArchivoMusica.h"
 #include "../archivos/ArchivoEstado.h"
 #include "../busqueda/BuscadorCanciones.h"
-
+#include "../ranking/RankingCanciones.h"
+#include "../ranking/RankingArtistas.h"
 class Reproductor {
 private:
     ListaCanciones cancionesRegistradas;
@@ -26,8 +27,12 @@ private:
     void registrarReproduccionActual();
 
     void menuBuscarCanciones();
-    
 
+    void menuRanking();
+    void mostrarTopCanciones();
+
+    void mostrarTopArtistas();
+    
 public:
     Reproductor();
 

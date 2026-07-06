@@ -19,4 +19,9 @@ add_executable(Taller1 main.cpp
         Busqueda/BuscadorCanciones.h
         Busqueda/BuscadorCanciones.cpp
         ranking/RankingCanciones.h
-        ranking/RankingCanciones.cpp)
+        ranking/RankingCanciones.cpp
+        modelo/ArtistaRanking.h
+        modelo/ArtistaRanking.cpp
+        ranking/RankingArtistas.h
+        ranking/RankingArtistas.cpp
+)
